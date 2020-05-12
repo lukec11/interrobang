@@ -40,6 +40,11 @@ def execPrivateChannel(event_data):
         :revolving_hearts:'''
     )
 
+    pinMessage(
+        channel=PUBLIC_CHANNEL,
+        timestamp=ts
+    )
+
     addReaction('heavy_check_mark', channel, ts)
 
 
@@ -61,11 +66,7 @@ def execPublicChannel(event_data):
     #     #deleteMessage(PUBLIC_CHANNEL, ts)
     #     warnUser(user)
     # Currently removed because I don't have an admin token
-    if user == SLACK_BOT_USER:
-        pinMessage(
-            channel=PUBLIC_CHANNEL,
-            timestamp=ts
-        )
+
 
 # event listener for messages
 @events_client.on('message')
