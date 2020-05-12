@@ -40,6 +40,11 @@ def execPrivateChannel(event_data):
         :revolving_hearts:'''
     )
 
+    pinMessage(
+        channel=channel,
+        ts=ts
+    )
+
     addReaction('heavy_check_mark', channel, ts)
 
 
@@ -60,6 +65,7 @@ def execPublicChannel(event_data):
     #     print('Deleting non-slackbot message')
     #     #deleteMessage(PUBLIC_CHANNEL, ts)
     #     warnUser(user)
+    # Currently removed because I don't have an admin token
 
 # event listener for messages
 @events_client.on('message')
@@ -125,6 +131,14 @@ def deleteMessage(channel, ts):
         token=ADMIN_TOKEN,
         ts=ts,
         channel=channel)
+
+
+def pinMessage(channel, ts):
+    return web_client.pins.add(
+        token=BOT_TOKEN,
+        timestamp=ts,
+        channel=channel
+    )
 
 
 def postQuestion(question, topic):
