@@ -42,7 +42,7 @@ def execPrivateChannel(event_data):
 
     pinMessage(
         channel=PUBLIC_CHANNEL,
-        timestamp=ts
+        ts=ts
     )
 
     addReaction('heavy_check_mark', channel, ts)
