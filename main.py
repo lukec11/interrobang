@@ -51,8 +51,6 @@ def execPrivateChannel(event_data):
 
 
 def execPublicChannel(event_data):
-    #print(f'New message to channel - {event_data}')
-    # raises exception if that's not the right channel
 
     print('Message was in channel!')
     message = event_data['event']['text']
@@ -75,7 +73,10 @@ def execPublicChannel(event_data):
 def onMessage(event_data):
 
     channel = event_data['event']['channel']
-    print(f'CHANNEL: {channel}')
+    message = event_data['event']['text']
+
+    if message[0] == '!':
+        return None
 
     if channel[0] == ('C'):
         return None
