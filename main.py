@@ -83,6 +83,8 @@ def onMessage(event_data):
         print('Executing private channel')
         execPrivateChannel(event_data)
 
+    return ('', 200)
+
 
 def warnUser(user):
     print('Sending warning message to user!')
