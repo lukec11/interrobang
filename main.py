@@ -3,18 +3,17 @@ import requests
 from slackeventsapi import SlackEventAdapter
 import json
 from datetime import date
+import os
 
-# I usually use the RTM api - this is the first time i've used events in python. Not going to be super clean
 
-with open('config.json') as f:
-    c = json.load(f)
-    SIGNING_SECRET = c['SIGNING_SECRET']
-    BOT_TOKEN = c['BOT_TOKEN']
-    #ADMIN_TOKEN = c['ADMIN_TOKEN']
-    WORKSPACE_NAME = c['WORKSPACE_NAME']
-    PUBLIC_CHANNEL = c['SLACK_CHANNEL']
-    PRIVATE_CHANNEL = c['PRIVATE_CHANNEL']
-    SLACK_BOT_USER = c['SLACK_UID']
+c = os.environ
+SIGNING_SECRET = c['SIGNING_SECRET']
+BOT_TOKEN = c['BOT_TOKEN']
+#ADMIN_TOKEN = c['ADMIN_TOKEN']
+WORKSPACE_NAME = c['WORKSPACE_NAME']
+PUBLIC_CHANNEL = c['SLACK_CHANNEL']
+PRIVATE_CHANNEL = c['PRIVATE_CHANNEL']
+SLACK_BOT_USER = c['SLACK_UID']
 
 events_client = SlackEventAdapter(SIGNING_SECRET, endpoint='/slack/events')
 web_client = slack.WebClient(token=BOT_TOKEN)
@@ -144,4 +143,4 @@ def postQuestion(question, topic):
 
 
 # starting server?
-events_client.start(port=5000, debug=True)
+events_client.start(port=80, debug=False)
