@@ -31,7 +31,7 @@ def execPrivateChannel(event_data):
     tss = ts.replace('.', '')
     user = event_data['event']['user']
 
-    postQuestion(
+    res = postQuestion(
         question=text,
         topic=f'''<https://{WORKSPACE_NAME}.slack.com/archives/{PUBLIC_CHANNEL}/p{tss}|Today\'s Topic!> 
         Respond in threads only please! 
@@ -40,12 +40,14 @@ def execPrivateChannel(event_data):
         :revolving_hearts:'''
     )
 
-    pinMessage(
-        channel=PUBLIC_CHANNEL,
-        ts=ts
-    )
-
     addReaction('heavy_check_mark', channel, ts)
+
+    print(res)
+
+    pinMessage(
+        PUBLIC_CHANNEL,
+        res['ts']
+    )
 
 
 def execPublicChannel(event_data):
@@ -155,6 +157,8 @@ def postQuestion(question, topic):
     updateTopic(
         topic=f'<https://{WORKSPACE_NAME}.slack.com/archives/{channel}/p{ts}|*Today\'s topic!*> Respond in threads only please :D', channel=channel
     )
+
+    return res
 
 
 # starting server?
