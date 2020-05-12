@@ -11,7 +11,7 @@
 		"COPY ./ /usr/src/app",
 		"ENV FLASK_ENV production",
 		"RUN ls",
-		"CMD [ \"python3\", \"main.py\" ]",
-		"EXPOSE 80"
+		"EXPOSE 80",
+		"CMD [ \"python3\", \"main.py\" ]"
 	]
 }
