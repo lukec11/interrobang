@@ -134,7 +134,7 @@ def deleteMessage(channel, ts):
 
 
 def pinMessage(channel, ts):
-    return web_client.pins.add(
+    return web_client.pins_add(
         token=BOT_TOKEN,
         timestamp=ts,
         channel=channel
