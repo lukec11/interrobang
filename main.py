@@ -143,4 +143,4 @@ def postQuestion(question, topic):
 
 
 # starting server?
-events_client.start(port=3000, debug=False)
+events_client.start(port=3000, debug=True)
