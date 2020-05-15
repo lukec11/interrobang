@@ -9,7 +9,7 @@ import os
 c = os.environ
 SIGNING_SECRET = c['SIGNING_SECRET']
 BOT_TOKEN = c['BOT_TOKEN']
-#ADMIN_TOKEN = c['ADMIN_TOKEN']
+ADMIN_TOKEN = c['ADMIN_TOKEN']
 WORKSPACE_NAME = c['WORKSPACE_NAME']
 PUBLIC_CHANNEL = c['SLACK_CHANNEL']
 PRIVATE_CHANNEL = c['PRIVATE_CHANNEL']
@@ -49,25 +49,6 @@ def execPrivateChannel(event_data):
         res['ts']
     )
 
-
-def execPublicChannel(event_data):
-
-    print('Message was in channel!')
-    message = event_data['event']['text']
-    ts = event_data['event']['ts']
-    user = event_data['event']['user']
-
-    # if 'set the channel topic' in message:
-    #     print('Deleting channel topic message')
-    #     deleteMessage(ts)
-
-    # if user != SLACK_BOT_USER:
-    #     print('Deleting non-slackbot message')
-    #     #deleteMessage(PUBLIC_CHANNEL, ts)
-    #     warnUser(user)
-    # Currently removed because I don't have an admin token
-
-
 # event listener for messages
 @events_client.on('message')
 def onMessage(event_data):
@@ -80,22 +61,12 @@ def onMessage(event_data):
 
     if channel[0] == ('C'):
         return None
+
     elif channel[0] == ('G'):
         print('Executing private channel')
         execPrivateChannel(event_data)
 
     return ('', 200)
-
-
-def warnUser(user):
-    print('Sending warning message to user!')
-    postEphemeralMessage(
-        """Hi! All top level messages must be questions (asked by the bot). 
-        \nIf you want to respond to a question, please do it in that question's thread. 
-        \nLet <@UE8DH0UHM> know if if you have questions or if i made a mistake.""",
-        PUBLIC_CHANNEL,
-        user
-    )
 
 
 def addReaction(reaction, channel, ts):
@@ -108,9 +79,13 @@ def addReaction(reaction, channel, ts):
 
 
 def updateTopic(topic, channel):  # Helper method to update channel topic
-    web_client.conversations_setTopic(
+    res = web_client.conversations_setTopic(
         channel=channel,
         topic=topic
+    )
+    deleteMessage(
+        PUBLIC_CHANNEL,
+        res['channel']['latest']['ts']
     )
 
 
@@ -136,7 +111,9 @@ def deleteMessage(channel, ts):
     return web_client.chat_delete(
         token=ADMIN_TOKEN,
         ts=ts,
-        channel=channel)
+        channel=channel,
+        as_user=False
+    )
 
 
 def pinMessage(channel, ts):
