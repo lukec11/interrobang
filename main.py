@@ -57,10 +57,10 @@ def onMessage(event_data):
     message = event_data['event']['text']
 
     if message[0] == '!':
-        return None
+        return ('', 200)
 
     if channel[0] == ('C'):
-        return None
+        return ('', 200)
 
     elif channel[0] == ('G'):
         print('Executing private channel')
