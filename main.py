@@ -53,13 +53,13 @@ def execPrivateChannel(event_data):
 @events_client.on('message')
 def onMessage(event_data):
 
-    channel = event_data['event']['channel']
-    message = event_data['event']['text']
-
-    if message[0] == '!':
+    try:
+        channel = event_data['event']['channel']
+        message = event_data['event']['text']
+    except KeyError:
         return ('', 200)
 
-    if channel[0] == ('C'):
+    if message[0] == '!':
         return ('', 200)
 
     elif channel[0] == ('G'):
