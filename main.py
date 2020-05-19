@@ -71,6 +71,7 @@ def onMessage(event_data):
 
     if 'set the channel' in message:
         try:
+            print(event_data)
             deleteMessage(PUBLIC_CHANNEL, event_data['event']['ts'])
         except KeyError as e:
             print(f'ERR: Failed to delete message. {e}')
