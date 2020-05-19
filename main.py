@@ -34,16 +34,14 @@ def execPrivateChannel(event_data):
 
     res = postQuestion(
         question=text,
-        topic=f'''<https://{WORKSPACE_NAME}.slack.com/archives/{PUBLIC_CHANNEL}/p{tss}|Today\'s Topic!> 
-        Respond in threads only please! 
-        :hackclub: 
-        :wave::skin-tone-4: 
+        topic=f'''<https://{WORKSPACE_NAME}.slack.com/archives/{PUBLIC_CHANNEL}/p{tss}|Today\'s Topic!>
+        Respond in threads only please!
+        :hackclub:
+        :wave::skin-tone-4:
         :revolving_hearts:'''
     )
 
     addReaction('heavy_check_mark', channel, ts)
-
-    print(res)
 
     pinMessage(
         PUBLIC_CHANNEL,
@@ -86,15 +84,9 @@ def addReaction(reaction, channel, ts):
 
 
 def updateTopic(topic, channel):  # Helper method to update channel topic
-    res = web_client.conversations_setTopic(
+    return web_client.conversations_setTopic(
         channel=channel,
         topic=topic
-    )
-    ts = getLastMessage(channel)['messages'][0]['ts']
-    print(getLastMessage(channel))
-    deleteMessage(
-        channel,
-        ts
     )
 
 
@@ -147,14 +139,24 @@ def postQuestion(question, topic):
         channel=PUBLIC_CHANNEL
     )
 
-    channel = res['channel']
-    ts = res['message']['ts'].replace('.', '')  # returns ts sans-period
+    tss = res['message']['ts'].replace('.', '')  # returns ts sans-period
 
     updateTopic(
-        topic=f'<https://{WORKSPACE_NAME}.slack.com/archives/{channel}/p{ts}|*Today\'s topic!*> Respond in threads only please :D', channel=channel
+        topic=f'<https://{WORKSPACE_NAME}.slack.com/archives/{PUBLIC_CHANNEL}/p{tss}|*Today\'s topic!*> Respond in threads only please :D',
+        channel=PUBLIC_CHANNEL
     )
 
-    return res
+    lastMessage = getLastMessage(PUBLIC_CHANNEL)
+    postPlainMessage(
+        lastMessage,
+        PUBLIC_CHANNEL
+    )
+    deleteMessage(
+        PUBLIC_CHANNEL,
+        lastMessage['messages'][0]['ts']
+    )
+
+    return ('', 200)
 
 
 # starting server?
