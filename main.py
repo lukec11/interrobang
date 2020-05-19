@@ -69,14 +69,6 @@ def onMessage(event_data):
     if message[0] == '!':
         return ('', 200)
 
-    if 'set the channel' in message:
-        try:
-            print(event_data)
-            deleteMessage(PUBLIC_CHANNEL, event_data['event']['ts'])
-        except KeyError as e:
-            print(f'ERR: Failed to delete message. {e}')
-            return ('', 200)
-
     elif channel[0] == ('G'):
         print('Executing private channel')
         execPrivateChannel(event_data)
@@ -97,6 +89,11 @@ def updateTopic(topic, channel):  # Helper method to update channel topic
     res = web_client.conversations_setTopic(
         channel=channel,
         topic=topic
+    )
+    ts = getLastMessage(channel)['message'][0]['ts']
+    deleteMessage(
+        channel,
+        ts
     )
 
 
@@ -131,6 +128,14 @@ def pinMessage(channel, ts):
         token=BOT_TOKEN,
         timestamp=ts,
         channel=channel
+    )
+
+
+def getLastMessage(channel):
+    return web_client.conversations_history(
+        channel=channel,
+        limit=1,
+        token=ADMIN_TOKEN
     )
 
 
