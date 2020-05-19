@@ -139,7 +139,7 @@ def postQuestion(question, topic):
         channel=PUBLIC_CHANNEL
     )
 
-    tss = getLastMessage()['messages'][0]['ts'].replace(
+    tss = getLastMessage(PUBLIC_CHANNEL)['messages'][0]['ts'].replace(
         '.', '')  # returns ts sans-period
 
     updateTopic(
