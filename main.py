@@ -91,6 +91,7 @@ def updateTopic(topic, channel):  # Helper method to update channel topic
         topic=topic
     )
     ts = getLastMessage(channel)['messages'][0]['ts']
+    print(getLastMessage(channel))
     deleteMessage(
         channel,
         ts
