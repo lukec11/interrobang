@@ -135,7 +135,7 @@ def getLastMessage(channel):
     return web_client.conversations_history(
         channel=channel,
         limit=1,
-        token=ADMIN_TOKEN
+        token=BOT_TOKEN
     )
 
 
