@@ -91,7 +91,7 @@ def updateTopic(topic, channel):  # Helper method to update channel topic
 
 
 def postPlainMessage(text, channel):
-    return web_client.chat_postMessage(
+    web_client.chat_postMessage(
         token=BOT_TOKEN,
         text=text,
         channel=channel,
@@ -134,7 +134,7 @@ def getLastMessage(channel):
 
 def postQuestion(question, topic):
     day = str(date.today())  # gets today's date
-    res = postPlainMessage(
+    postPlainMessage(
         text=f'Topic for {day}: \n\n {question}',
         channel=PUBLIC_CHANNEL
     )
