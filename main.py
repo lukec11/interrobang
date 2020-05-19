@@ -121,8 +121,7 @@ def deleteMessage(channel, ts):
     return web_client.chat_delete(
         token=ADMIN_TOKEN,
         ts=ts,
-        channel=channel,
-        as_user=False
+        channel=channel
     )
 
 
