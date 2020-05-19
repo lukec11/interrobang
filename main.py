@@ -65,6 +65,13 @@ def onMessage(event_data):
     if message[0] == '!':
         return ('', 200)
 
+    if 'set the channel' in message:
+        try:
+            deleteMessage(PUBLIC_CHANNEL, event_data['event']['ts'])
+        except KeyError as e:
+            print(f'ERR: Failed to delete message. {e}')
+            return ('', 200)
+
     elif channel[0] == ('G'):
         print('Executing private channel')
         execPrivateChannel(event_data)
