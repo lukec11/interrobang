@@ -97,10 +97,6 @@ def updateTopic(topic, channel):  # Helper method to update channel topic
         channel=channel,
         topic=topic
     )
-    deleteMessage(
-        PUBLIC_CHANNEL,
-        res['channel']['latest']['ts']
-    )
 
 
 def postPlainMessage(text, channel):
