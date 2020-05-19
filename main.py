@@ -90,7 +90,7 @@ def updateTopic(topic, channel):  # Helper method to update channel topic
         channel=channel,
         topic=topic
     )
-    ts = getLastMessage(channel)['message'][0]['ts']
+    ts = getLastMessage(channel)['messages'][0]['ts']
     deleteMessage(
         channel,
         ts
