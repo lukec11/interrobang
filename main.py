@@ -125,10 +125,15 @@ def pinMessage(channel, ts):
 
 
 def getLastMessage(channel):
-    return web_client.conversations_history(
-        channel=channel,
-        limit=1,
-        token=BOT_TOKEN
+    return json.loads(
+        requests.post(
+            f'''https://slack.com/api/conversations.history
+            ?token={BOT_TOKEN}
+            &channel={channel}
+            &limit=1
+            &pretty=1
+            '''
+        ).text
     )
 
 
