@@ -139,7 +139,8 @@ def postQuestion(question, topic):
         channel=PUBLIC_CHANNEL
     )
 
-    tss = res['message']['ts'].replace('.', '')  # returns ts sans-period
+    tss = getLastMessage()['messages'][0]['ts'].replace(
+        '.', '')  # returns ts sans-period
 
     updateTopic(
         topic=f'<https://{WORKSPACE_NAME}.slack.com/archives/{PUBLIC_CHANNEL}/p{tss}|*Today\'s topic!*> Respond in threads only please :D',
