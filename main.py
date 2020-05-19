@@ -62,6 +62,10 @@ def onMessage(event_data):
     except KeyError:
         return ('', 200)
 
+    if channel == PUBLIC_CHANNEL:
+        print("Message was sent in public channel!")
+        return ('', 200)
+
     if message[0] == '!':
         return ('', 200)
 
