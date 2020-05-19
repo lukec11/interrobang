@@ -4,6 +4,7 @@ from slackeventsapi import SlackEventAdapter
 import json
 from datetime import date
 import os
+from flask import jsonify, request
 
 
 c = os.environ
@@ -48,6 +49,8 @@ def execPrivateChannel(event_data):
         PUBLIC_CHANNEL,
         res['ts']
     )
+
+    return ('', 200)
 
 # event listener for messages
 @events_client.on('message')
