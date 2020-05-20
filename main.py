@@ -20,7 +20,7 @@ events_client = SlackEventAdapter(SIGNING_SECRET, endpoint='/slack/events')
 web_client = slack.WebClient(token=BOT_TOKEN)
 
 
-def execPrivateChannel(event_data):
+def onNewQuestion(event_data):
     channel = event_data['event']['channel']
 
     if channel != PRIVATE_CHANNEL:
@@ -31,6 +31,9 @@ def execPrivateChannel(event_data):
     # ts without the '.' - the format that the link takes for some reason
     tss = ts.replace('.', '')
     user = event_data['event']['user']
+
+    if not checkReaction:
+        return None
 
     res = postQuestion(
         question=text,
@@ -45,7 +48,7 @@ def execPrivateChannel(event_data):
 
     pinMessage(
         PUBLIC_CHANNEL,
-        res['ts']
+        res
     )
 
     return ('', 200)
@@ -61,15 +64,16 @@ def onMessage(event_data):
         return ('', 200)
 
     if channel == PUBLIC_CHANNEL:
-        print("Message was sent in public channel!")
+        print("Message was sent in public channel, ignoring!")
         return ('', 200)
 
     if message[0] == '!':
+        print('Message started with !, ignore!')
         return ('', 200)
 
     elif channel[0] == ('G'):
-        print('Executing private channel')
-        execPrivateChannel(event_data)
+        print('New Question was posted!')
+        onNewQuestion(event_data)
 
     return ('', 200)
 
@@ -81,6 +85,19 @@ def addReaction(reaction, channel, ts):
         channel=channel,
         timestamp=ts
     )
+
+
+def checkReaction(reaction, channel, ts):
+    reactions = web_client.reactions_get(
+        token=BOT_TOKEN,
+        channel=channel,
+        timestamp=ts
+    )
+    if reactions['message']['reactions'][0]['count'] == 1:
+        print('Reaction found!')
+        return True
+    else:
+        return False
 
 
 def updateTopic(topic, channel):  # Helper method to update channel topic
@@ -95,7 +112,9 @@ def postPlainMessage(text, channel):
         token=BOT_TOKEN,
         text=text,
         channel=channel,
-        as_user=True
+        icon_emoji='interrobang',
+        username='Interrobang'
+
     )
 
 
@@ -109,10 +128,10 @@ def postEphemeralMessage(text, channel, uid):
 
 
 def deleteMessage(channel, ts):
-    return web_client.chat_delete(
-        token=ADMIN_TOKEN,
-        ts=ts,
-        channel=channel
+    return json.loads(
+        requests.get(
+            f'https://slack.com/api/chat.delete?token={ADMIN_TOKEN}&ts={ts}&channel={channel}&pretty=1'
+        ).text
     )
 
 
@@ -125,16 +144,12 @@ def pinMessage(channel, ts):
 
 
 def getLastMessage(channel):
-    return json.loads(
-        requests.post(
-            f'''https://slack.com/api/conversations.history
-            ?token={BOT_TOKEN}
-            &channel={channel}
-            &limit=1
-            &pretty=1
-            '''
+    res = json.loads(
+        requests.get(
+            f'https://slack.com/api/conversations.history?token={BOT_TOKEN}&channel={channel}&limit=1&pretty=1'
         ).text
     )
+    return res
 
 
 def postQuestion(question, topic):
@@ -152,18 +167,13 @@ def postQuestion(question, topic):
         channel=PUBLIC_CHANNEL
     )
 
-    lastMessage = getLastMessage(PUBLIC_CHANNEL)
-    postPlainMessage(
-        lastMessage,
-        PUBLIC_CHANNEL
-    )
     deleteMessage(
-        PUBLIC_CHANNEL,
-        lastMessage['messages'][0]['ts']
+        channel=PUBLIC_CHANNEL,
+        ts=getLastMessage(PUBLIC_CHANNEL)['messages'][0]['ts']
     )
 
-    return ('', 200)
+    return getLastMessage(PUBLIC_CHANNEL)['messages'][0]['ts']
 
 
 # starting server?
-events_client.start(host='0.0.0.0', port=3000, debug=False)
+events_client.start(host='0.0.0.0', port=3000, debug=True)
