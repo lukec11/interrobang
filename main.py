@@ -36,7 +36,7 @@ def onNewQuestion(event_data):
         return None
 
     res = postQuestion(
-        question=text,
+        question=text[1:],
         topic=f'''<https://{WORKSPACE_NAME}.slack.com/archives/{PUBLIC_CHANNEL}/p{tss}|Today\'s Topic!>
         Respond in threads only please!
         :hackclub:
@@ -67,7 +67,7 @@ def onMessage(event_data):
         print("Message was sent in public channel, ignoring!")
         return ('', 200)
 
-    if message[0] == '!':
+    if message[0] != '?':
         print('Message started with !, ignore!')
         return ('', 200)
 
